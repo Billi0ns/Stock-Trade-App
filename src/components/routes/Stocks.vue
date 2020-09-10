@@ -1,11 +1,13 @@
 <template>
   <div class=".container-fluid">
     <div class="row">
-      <div v-for="stock in stocks" :key="stock.name">
+      <div v-for="stock in portfolio" :key="stock.name">
         <div class="card">
           <div class="card-header">
             <span class="font-weight-bold text-success">{{ stock.name }}</span>
-            <span class="text-success">(Price: {{ stock.price }})</span>
+            <span class="text-success stockInfo"
+              >(Price: {{ stock.price }})</span
+            >
           </div>
           <div class="card-body">
             <div class="input-group">
@@ -14,8 +16,9 @@
                 class="form-control"
                 aria-label="Text input with dropdown button"
                 placeholder="Quantity"
+                v-model.number="stock.buyAmount"
               />
-              <button class="btn">Buy</button>
+              <button class="btn" @click="buyStock(stock)">Buy</button>
             </div>
           </div>
         </div>
@@ -26,27 +29,26 @@
 
 <script>
 export default {
-  data() {
-    return {
-      stocks: [
-        {
-          name: 'Tesla',
-          price: 110,
-        },
-        {
-          name: 'Google',
-          price: 200,
-        },
-        {
-          name: 'Apple',
-          price: 250,
-        },
-        {
-          name: 'Twitter',
-          price: 30,
-        },
-      ],
-    };
+  computed: {
+    portfolio() {
+      return this.$store.state.portfolio;
+    },
+  },
+  methods: {
+    buyStock(stock) {
+      const funds = this.$store.state.funds;
+      const price = stock.price;
+      const buyAmount = stock.buyAmount;
+
+      if (buyAmount < 0) {
+        stock.buyAmount = '';
+        return alert("The amount you want to buy can't be negative!");
+      }
+      if (price * buyAmount > funds) {
+        return alert("You don't have enough money!");
+      }
+      this.$store.commit('buyStock', stock);
+    },
   },
 };
 </script>
@@ -73,5 +75,8 @@ export default {
 }
 .col-sm-6 {
   border: rgb(230, 244, 223);
+}
+.stockInfo {
+  font-size: 12px;
 }
 </style>

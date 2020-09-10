@@ -8,14 +8,18 @@
       Click on 'End Day' to begin a new day!
     </p>
     <hr class="my-4" />
-    <p class="font-weight-bold">
-      Your Funds: $10,000.
-    </p>
+    <p class="font-weight-bold">Your Funds: ${{ funds }}.</p>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    funds() {
+      return this.$store.getters.stringFunds;
+    },
+  },
+};
 </script>
 
 <style></style>

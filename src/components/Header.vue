@@ -11,7 +11,7 @@
     </ul>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a href="#" class="nav-link">End Day</a>
+        <a href="#" class="nav-link" @click="generatePrice">End Day</a>
       </li>
       <li class="nav-item dropdown">
         <a
@@ -25,19 +25,43 @@
           >Save & Load</a
         >
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Save Data</a>
-          <a class="dropdown-item" href="#">Load Data</a>
+          <a class="dropdown-item" href="#" @click="saveData">Save Data</a>
+          <a class="dropdown-item" href="#" @click="loadData">Load Data</a>
         </div>
       </li>
       <li class="nav-item">
-        <div class="nav-link">Funds: $10,000</div>
+        <div class="nav-link">Funds: ${{ funds }}</div>
       </li>
     </ul>
   </nav>
 </template>
 
 <script>
-export default {};
+let _ = require('lodash');
+export default {
+  computed: {
+    funds() {
+      return this.$store.getters.stringFunds;
+    },
+  },
+  methods: {
+    generatePrice() {
+      this.$store.commit('generateStockPrice');
+    },
+    saveData() {
+      this.$store.state.savedData = _.cloneDeep(this.$store.state.portfolio);
+      this.$store.state.savedFunds = this.$store.state.funds;
+    },
+    loadData() {
+      const savedData = this.$store.state.savedData;
+      if (savedData.length === 0) {
+        return alert('You need to save data first!');
+      }
+      this.$store.state.portfolio = _.cloneDeep(savedData);
+      this.$store.state.funds = this.$store.state.savedFunds;
+    },
+  },
+};
 </script>
 
 <style></style>

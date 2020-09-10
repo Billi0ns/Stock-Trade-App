@@ -1,11 +1,13 @@
 <template>
   <div class=".container-fluid">
     <div class="row">
-      <div v-for="stock in portfolio" :key="stock.name">
+      <div v-for="stock in ownedStocks" :key="stock.name">
         <div class="card">
           <div class="card-header">
             <span class="font-weight-bold">{{ stock.name }}</span>
-            <span class="">(Have: {{ stock.quantity }})</span>
+            <span class="stockInfo">
+              (Price: {{ stock.price }} | Quantity: {{ stock.quantity }})
+            </span>
           </div>
           <div class="card-body">
             <div class="input-group">
@@ -14,8 +16,9 @@
                 class="form-control"
                 aria-label="Text input with dropdown button"
                 placeholder="Quantity"
+                v-model.number="stock.sellAmount"
               />
-              <button class="btn">Buy</button>
+              <button class="btn" @click="sellStock(stock)">Sell</button>
             </div>
           </div>
         </div>
@@ -26,13 +29,27 @@
 
 <script>
 export default {
-  data() {
-    return {
-      portfolio: [
-        { name: 'Tesla', quantity: 10 },
-        { name: 'Google', quantity: 8 },
-      ],
-    };
+  computed: {
+    ownedStocks() {
+      return this.$store.getters.ownedStocks;
+    },
+  },
+  methods: {
+    sellStock(stock) {
+      const price = stock.price;
+      const sellAmount = stock.sellAmount;
+      const ownedAmount = stock.quantity;
+
+      if (sellAmount < 0) {
+        stock.sellAmount = '';
+        return alert("The amount you want to sell can't be negative!");
+      }
+
+      if (sellAmount > ownedAmount) {
+        return alert("You don't have enough stocks to sell!");
+      }
+      this.$store.commit('sellStock', stock);
+    },
   },
 };
 </script>
@@ -62,5 +79,8 @@ export default {
 }
 .col-sm-6 {
   border: rgb(225, 241, 248);
+}
+.stockInfo {
+  font-size: 12px;
 }
 </style>
