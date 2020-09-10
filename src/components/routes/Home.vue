@@ -2,7 +2,7 @@
   <div class="jumbotron">
     <h1 class="display-6">Trade or View your Portfolio</h1>
     <p>
-      You may Save & Load your Data
+      You may Save & Load your data
     </p>
     <p>
       Click on 'End Day' to begin a new day!
