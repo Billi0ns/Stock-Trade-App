@@ -18,7 +18,17 @@
                 placeholder="Quantity"
                 v-model.number="stock.buyAmount"
               />
-              <button class="btn" @click="buyStock(stock)">Buy</button>
+              <button
+                class="btn"
+                @click="buyStock(stock)"
+                :disabled="
+                  stock.buyAmount <= 0 ||
+                  !Number.isInteger(stock.buyAmount) ||
+                  insufficientFunds(stock)
+                "
+              >
+                {{ insufficientFunds(stock) ? 'Insufficient funds' : 'Buy' }}
+              </button>
             </div>
           </div>
         </div>
@@ -40,14 +50,13 @@ export default {
       const price = stock.price;
       const buyAmount = stock.buyAmount;
 
-      if (buyAmount < 0) {
-        stock.buyAmount = '';
-        return alert("The amount you want to buy can't be negative!");
-      }
       if (price * buyAmount > funds) {
         return alert("You don't have enough money!");
       }
       this.$store.commit('buyStock', stock);
+    },
+    insufficientFunds(stock) {
+      return stock.price * stock.buyAmount > this.$store.state.funds;
     },
   },
 };

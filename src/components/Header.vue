@@ -38,6 +38,8 @@
 
 <script>
 let _ = require('lodash');
+const axios = require('axios');
+const url = 'https://vue-stock-trader-3db0e.firebaseio.com/data.json';
 export default {
   computed: {
     funds() {
@@ -49,16 +51,35 @@ export default {
       this.$store.commit('generateStockPrice');
     },
     saveData() {
-      this.$store.state.savedData = _.cloneDeep(this.$store.state.portfolio);
-      this.$store.state.savedFunds = this.$store.state.funds;
+      /* this.$store.state.savedData = _.cloneDeep(this.$store.state.portfolio);
+      this.$store.state.savedFunds = this.$store.state.funds; */
+      const data = {
+        funds: this.$store.state.funds,
+        portfolio: this.$store.state.portfolio,
+      };
+      axios
+        .put(url, data)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     loadData() {
-      const savedData = this.$store.state.savedData;
-      if (savedData.length === 0) {
-        return alert('You need to save data first!');
-      }
-      this.$store.state.portfolio = _.cloneDeep(savedData);
-      this.$store.state.funds = this.$store.state.savedFunds;
+      const vm = this;
+      let data;
+      axios
+        .get(url)
+        .then((response) => (data = response.data))
+        .then((data) => {
+          if (data) {
+            vm.$store.commit('loadPortfolio', data);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 };

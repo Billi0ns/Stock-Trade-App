@@ -18,7 +18,15 @@
                 placeholder="Quantity"
                 v-model.number="stock.sellAmount"
               />
-              <button class="btn" @click="sellStock(stock)">Sell</button>
+              <button
+                class="btn"
+                @click="sellStock(stock)"
+                :disabled="
+                  stock.sellAmount <= 0 || !Number.isInteger(stock.sellAmount)
+                "
+              >
+                Sell
+              </button>
             </div>
           </div>
         </div>
@@ -39,11 +47,6 @@ export default {
       const price = stock.price;
       const sellAmount = stock.sellAmount;
       const ownedAmount = stock.quantity;
-
-      if (sellAmount < 0) {
-        stock.sellAmount = '';
-        return alert("The amount you want to sell can't be negative!");
-      }
 
       if (sellAmount > ownedAmount) {
         return alert("You don't have enough stocks to sell!");

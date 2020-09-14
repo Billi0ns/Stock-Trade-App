@@ -58,5 +58,9 @@ export const store = new Vuex.Store({
       stock.quantity -= stock.sellAmount;
       stock.sellAmount = '';
     },
+    loadPortfolio(state, data) {
+      state.portfolio = data.portfolio;
+      state.funds = data.funds;
+    },
   },
 });
