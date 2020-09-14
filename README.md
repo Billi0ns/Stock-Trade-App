@@ -1,18 +1,7 @@
-# vue-cli
+# Stock Trade app
+> Practice Project from Vue course (Udemy)
 
-> A Vue.js project
+Main goal is to practice Vue
 
-## Build Setup
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-```
-
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Visit the project here: [github.io](https://billi0ns.github.io/Stock-Trade-App/#/)
